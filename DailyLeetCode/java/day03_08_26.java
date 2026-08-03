@@ -3,25 +3,30 @@ package DailyLeetCode.java;
 class Solution {
     public String stoneGameIII(final int[] stoneValue) {
         int len = stoneValue.length;
-        int[] dp = new int[len + 1];
+        
+        int next1 = 0;
+        int next2 = 0;
+        int next3 = 0;
+        
         int pos = len - 1;
 
-        dp[pos] = stoneValue[len - 1];
-
-        if(len>1){
-        dp[pos - 1] = stoneValue[len - 2] + Math.max(-dp[pos], stoneValue[pos] - dp[pos + 1]);
-        }
-        pos -= 2;
-
-
         while (pos >= 0) {
-            dp[pos] = stoneValue[pos] + Math.max(-dp[pos + 1], Math.max(stoneValue[pos + 1] - dp[pos + 2],
-                    stoneValue[pos + 1] + stoneValue[pos + 2] - dp[pos + 3]));
+            int opt1 = -next1; 
+            int opt2 = pos + 1 < len ? (stoneValue[pos + 1] - next2) : Integer.MIN_VALUE;
+            int opt3 = pos + 2 < len ? (stoneValue[pos + 1] + stoneValue[pos + 2] - next3) : Integer.MIN_VALUE;
+            
+            int current = stoneValue[pos] + Math.max(opt1, Math.max(opt2, opt3));
+
+            next3 = next2;
+            next2 = next1;
+            next1 = current;
+
             pos--;
         }
-        if (dp[0] > 0) {
+        
+        if (next1 > 0) {
             return "Alice";
-        } else if (dp[0] < 0) {
+        } else if (next1 < 0) {
             return "Bob";
         } else {
             return "Tie";
