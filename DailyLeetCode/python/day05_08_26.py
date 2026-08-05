@@ -1,29 +1,25 @@
 from typing import List
 
 class Solution:
-    def dfs(self, node, neighbours, suspicious, susNodes):
-        suspicious[node] = True
-        susNodes.append(node)
-        for neigh in neighbours[node]:
-            if not suspicious[neigh]:
-                self.dfs(neigh, neighbours, suspicious, susNodes)
-
     def remainingMethods(self, n: int, k: int, invocations: List[List[int]]) -> List[int]:
-        lookingAtMe = [[] for _ in range(n)]
         neighbours = [[] for _ in range(n)]
-        suspicious = [False] * n
-        susNodes = []
-
-        for edge in invocations:
-            neighbours[edge[0]].append(edge[1])
-            lookingAtMe[edge[1]].append(edge[0])
+        for u, v in invocations:
+            neighbours[u].append(v)
         
-        self.dfs(k, neighbours, suspicious, susNodes)
+        suspicious = [False] * n
+        suspicious[k] = True
+        stack = [k]
+        
+        while stack:
+            curr = stack.pop()
+            for neighbor in neighbours[curr]:
+                if not suspicious[neighbor]:
+                    suspicious[neighbor] = True
+                    stack.append(neighbor)
 
-        for node in susNodes:
-            for looker in lookingAtMe[node]:
-                if not suspicious[looker]:
-                    return [i for i in range(n)]
+        for u, v in invocations:
+            if suspicious[v] and not suspicious[u]:
+                return list(range(n))
         
         return [i for i in range(n) if not suspicious[i]]
 
