@@ -121,7 +121,6 @@ class Solution {
         return cnt;
     }
  
-    // Same greedy as neededCount, but actually records which digits were used.
     private void fillDigits(int r2, int r3, int[] bucket) {
         bucket[9] += r3 / 2; r3 %= 2;
         bucket[8] += r2 / 3; r2 %= 3;
