@@ -1,48 +1,55 @@
-#include <iostream>
-#include <ranges>
-
-using namespace std;
+#include <vector>
+#include <array>
+#include <algorithm>
 
 class Solution {
 public:
-    int largestInteger(vector<int>& nums, const int k) {
-        if(k==nums.size()){
-            //return max val
-            return *ranges::max_element(nums);
-        }else if (k==1){
-            // return max val apearing once if exists
-            // nums.size()>1
-            ranges::sort(nums);
-            int i = nums.size()-1;
-            while(i>0 && nums[i]==nums[i-1]){
-                i--;
-                while(i>0 && nums[i]==nums[i+1]){
-                    i--;
-                }
-            }
-            if(i==0 && nums[i]==nums[i+1]){
-                return -1;
-            }else{
-                return nums[i];
-            }
-        }else{
-            // return first or last element if its the only one
-            // we know nums.size() > 1 at this point
-            int l = nums[0];
-            int r = nums[nums.size()-1];
-            int l_count = ranges::count(nums, l);
-            int r_count = ranges::count(nums, r);
-            if(l_count == 1 || r_count == 1){
-                if(l_count != 1){
-                    return r;
-                }else if (r_count !=1){
-                    return l;
-                }else{
-                    return max(l, r);
-                }
-            }else{
-                return -1;
-            }
+    // [[nodiscard]] informs the compiler that ignoring the return value of this function is a bug.
+    // Passing input as a const reference prevents unintended modifications (e.g., sorting).
+    // The trailing const means the function does not modify the object's state.
+    [[nodiscard]] int largestInteger(const std::vector<int>& nums, const int k) const {
+        const int n = static_cast<int>(nums.size());
+
+        // Case 1: k == n
+        // The entire array is the only subarray, so every element appears exactly once.
+        if (k == n) {
+            return *std::ranges::max_element(nums);
         }
+
+        // Case 2: k == 1
+        // We are looking for the largest element that appears in the ENTIRE array exactly once.
+        // Problem constraints (nums[i] <= 50) allow us to use a super-fast frequency array with O(1) space.
+        if (k == 1) {
+            std::array<int, 51> freq{};
+            for (const int num : nums) {
+                freq[num]++;
+            }
+            
+            // We iterate backwards, so the first unique element we find is guaranteed to be the largest.
+            for (int i = 50; i >= 0; --i) {
+                if (freq[i] == 1) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        // Case 3: 1 < k < n
+        // Mathematically: any element strictly inside the array (indices 1..n-2) belongs to at least two 
+        // subarrays of length k. The only valid candidates are the first and last elements, provided 
+        // they do not duplicate anywhere else in the array.
+        int max_val = -1;
+        const int first_val = nums.front();
+        const int last_val  = nums.back();
+
+        if (std::ranges::count(nums, first_val) == 1) {
+            max_val = std::max(max_val, first_val);
+        }
+        
+        if (std::ranges::count(nums, last_val) == 1) {
+            max_val = std::max(max_val, last_val);
+        }
+
+        return max_val;
     }
 };
