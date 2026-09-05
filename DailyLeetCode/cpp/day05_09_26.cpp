@@ -11,7 +11,7 @@ public:
         int min_r = INT_MAX;
         int max_l = INT_MIN;
 
-        std::vector<int> min_arr_r = std::vector<int>(len);
+        std::vector<int> min_arr_r(len);
 
         // Set the "minimum on the right" array
         for (int i = len - 1; i >= 0; i--) {
