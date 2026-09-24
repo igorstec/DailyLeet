@@ -1,4 +1,7 @@
 #include <iostream>
+#include <vector>
+#include <ranges>
+#include <algorithm>
 
 class Solution {
 public:

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <ranges>
 #include <numeric>
 using namespace std;
