@@ -5,6 +5,6 @@ DATE=$(date +"%-d %B")
 
 echo "Ustalona data dla commita: Day $DATE"
 
-git add .
+git add *
 git commit -m "Day $DATE"
 git push
