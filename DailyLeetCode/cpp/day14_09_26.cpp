@@ -7,16 +7,18 @@ public:
             return "";
         }
         const int h9 = sum/9;
+        const int m9 = sum%9;
+
         std::string to_return;
         to_return.reserve(num);
+
         to_return.append(h9, '9');
-        num-=h9;
-        if(num==0){
-            return to_return;
+
+        if(m9>0){
+            to_return.push_back(static_cast<char>('0' + m9));
         }
-        to_return.append(std::to_string(sum%9));
-        num--;
-        to_return.append(num, '0');
+        
+        to_return.append(num-to_return.size(), '0');
         
         return to_return;
     }
